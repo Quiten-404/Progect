@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS Users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(64) NOT NULL,
+    email VARCHAR(64) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    currency VARCHAR(3) NOT NULL DEFAULT 'RUB',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO Users (name, email, password_hash, currency) VALUES ('Демо Пользователь', 'demo@example.com', 'demo123', 'RUB');
+
+
+
+CREATE TABLE IF NOT EXISTS Categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INT REFERENCES Users(id) NOT NULL,
+    name VARCHAR(64) NOT NULL
+);

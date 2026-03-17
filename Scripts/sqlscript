@@ -14,5 +14,24 @@ INSERT INTO Users (name, email, password_hash, currency) VALUES ('Демо По�
 CREATE TABLE IF NOT EXISTS Categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INT REFERENCES Users(id) NOT NULL,
-    name VARCHAR(64) NOT NULL
+    name VARCHAR(64) NOT NULL -- Название категории
+);
+
+CREATE TABLE IF NOT EXISTS Account (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INT REFERENCES Users(id) NOT NULL,
+    name VARCHAR(64) NOT NULL, -- Название счета
+    spend_method VARCHAR(10) NOT NULL DEFAULT 'CARD',  -- Способ траты: CARD, CASH
+    balance DECIMAL(10, 2) DEFAULT 0.00
+    
+);
+
+CREATE TABLE IF NOT EXISTS "Transaction" (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES Users(id),
+    account_id INTEGER NOT NULL REFERENCES Account(id),
+    category_id INTEGER NOT NULL REFERENCES Categories(id),
+    amount DECIMAL(10, 2) NOT NULL,
+    description VARCHAR(256),
+    transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );

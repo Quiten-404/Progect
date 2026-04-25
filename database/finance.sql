@@ -1,0 +1,39 @@
+
+
+CREATE TABLE IF NOT EXISTS Users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(64) NOT NULL,
+    email VARCHAR(64) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    currency VARCHAR(3) NOT NULL DEFAULT 'RUB',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO Users (name, email, password_hash, currency) VALUES ('Демо Пользователь', 'demo@example.com', 'demo123', 'RUB');
+
+
+
+CREATE TABLE IF NOT EXISTS Categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INT REFERENCES Users(id) NOT NULL,
+    name VARCHAR(64) NOT NULL -- Название категории
+);
+
+CREATE TABLE IF NOT EXISTS Account (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INT REFERENCES Users(id) NOT NULL,
+    name VARCHAR(64) NOT NULL, -- Название счета
+    spend_method VARCHAR(10) NOT NULL DEFAULT 'CARD',  -- Способ траты: CARD, CASH
+    balance DECIMAL(10, 2) DEFAULT 0.00
+    
+);
+
+CREATE TABLE IF NOT EXISTS "Transaction" (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES Users(id),
+    account_id INTEGER NOT NULL REFERENCES Account(id),
+    category_id INTEGER NOT NULL REFERENCES Categories(id),
+    amount DECIMAL(10, 2) NOT NULL,
+    description VARCHAR(256),
+    transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP
+);

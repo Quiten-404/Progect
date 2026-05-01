@@ -79,26 +79,24 @@ def login(name, password):
     with get_DB() as conn:
         cur = conn.cursor()
         
-        cur.execute("SELECT name, email, password_hash FROM users WHERE name = ? AND password_hash = ?",(name,password_hash))
+        cur.execute("SELECT name, id, email, password_hash FROM users WHERE name = ? AND password_hash = ?",(name,password_hash))
         user = cur.fetchone()
 
         if user:
-            print(f"✅ Добро пожаловать, {user[0]}!")
-            return True
+            user_id = user[1]
+            print(f"✅ Добро пожаловать, {user[0]}, {user_id}!")
+            
+            return True, user_id 
         else:
             print("❌ Неверное имя пользователя или пароль")
             return False
+
+
+
        
 
 
 
 
 
-
-name = input("Имя: ")
-email = input("Email: ")
-password = input("Пароль: ")
-
-
-login(name, password)
 

@@ -27,5 +27,25 @@ def new_account(register_success, user_id):
                 print("\n📋 Текущие счета:")
                 acc = conn.execute("SELECT id, name, balance FROM Account WHERE user_id = ?", (user_id,)).fetchone()
                 print(acc)
+    else:
+        print("Ошибка: регистрация не выполнена")
+def add_2_account(login_success, user_id):
+    if login_success == True:
+        with get_DB() as conn:
+            account = conn.execute("SELECT id, name, spend_method, balance FROM account WHERE user_id = ?",(user_id,)).fetchall()
+
+            if account:
+                print(f"\n💳 Найдено {len(account)} аккаунтов для user_id {user_id}:")
+                print("═" * 50)
+
+                for account in account:
+                    acc_id, name, spend_method, balance = account
+                    print("\n💳 Информация об аккаунте:")
+                    print(f"  ID аккаунта: {acc_id}")
+                    print(f"  Владелец (user_id): {user_id}")
+                    print(f"  Баланс {name}: {balance} {spend_method}")
+                
+            else:
+                print("❌ Аккаунт не найден для user_id:", user_id)
 
 

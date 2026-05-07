@@ -15,7 +15,7 @@ def add_transaction(user_id):
             print(f"   Сумма: 850.50 руб.")
         
             conn.execute("""INSERT INTO "Transaction" (user_id, account_id, category_id, amount, description)VALUES (?, ?, ?, ?, ?)""", 
-                         (1, account['id'], category['id'], 850.50, "Покупка продуктов"))
+                         (user_id, account['id'], category['id'], 850.50, "Покупка продуктов"))
             
             # Обновляем баланс счёта (уменьшаем)
             conn.execute("""UPDATE Account SET balance = balance - ? WHERE id = ?""", (850.50, account['id']))

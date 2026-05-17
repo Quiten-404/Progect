@@ -75,6 +75,7 @@ def register_user_safe(name, email, password):
             return None
         
 def login(name, password):
+    user_id = None
     password_hash = get_password_hash(password)
     with get_DB() as conn:
         cur = conn.cursor()

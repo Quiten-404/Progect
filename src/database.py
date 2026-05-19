@@ -34,10 +34,18 @@ def init_database():
     
     print("✅ База данных инициализирована")
 
-def execute_query(query: int, id =()):    
+def execute_query(query: int, param =()):    
     with get_DB() as conn:
-        if id:
-            cursor = conn.execute(query, id)
+        if param:
+            cursor = conn.execute(query, param)
         else:
             cursor.execute(query)
         return [dict(row) for row in cursor.fetchall()]
+    
+def execute_insert(scl: int, param = ()):
+    with get_DB() as conn:
+        if param:
+            cur = conn.execute(sql, param)
+        else:
+            cur = conn.execute(sql)
+        return cur.lastrowid

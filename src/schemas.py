@@ -7,8 +7,27 @@ class AccountCreate(BaseModel):
     balance: float
 
 class AccountResponse(BaseModel):
+    """Модель для ответа API"""
     id: int
     user_id: int
     name: str
     spend_method: str
     balance: float
+
+class UserResponse(BaseModel):
+    """Модель для ответа API (GET запросы)"""
+    id: int
+    name: str
+    email: str
+    currency: str
+    created_at: Optional[datetime] = None
+
+class TransactionResponse(BaseModel):
+    """Модель для ответа API"""
+    id: int
+    user_id: int
+    account_id: int
+    category_id: int
+    amount: float
+    description: Optional[str] = None
+    transaction_date: datetime

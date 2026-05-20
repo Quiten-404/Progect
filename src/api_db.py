@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status,  Depends
 from src.database import execute_query, execute_insert, execute_update
 from src.schemas import (
     UserResponse, UserUpdate, 

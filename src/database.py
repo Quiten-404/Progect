@@ -49,3 +49,11 @@ def execute_insert(sql: str, param = ()):
         else:
             cur = conn.execute(sql)
         return cur.lastrowid
+
+def execute_update(sql: str, param = ()):
+     with get_DB() as conn:
+        if param:
+            cur = conn.execute(sql, param)
+        else:
+            cur = conn.execute(sql)
+        return cur.lastrowid

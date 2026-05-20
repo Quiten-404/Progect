@@ -16,6 +16,12 @@ class AccountResponse(BaseModel):
     spend_method: str
     balance: float
 
+class AccountUpdate(BaseModel):
+    """Модель для обновления счёта (все поля опциональны)"""
+    name: Optional[str] = None
+    spend_method: Optional[str] = None
+    balance: Optional[float] = None
+
 class UserResponse(BaseModel):
     """Модель для ответа API (GET запросы)"""
     id: int

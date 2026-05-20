@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from src.schemas import UserResponse, AccountResponse, AccountCreate
-from src.database import execute_query, execute_insert
+from src.schemas import UserResponse, AccountResponse, AccountCreate, AccountUpdate
+from src.database import execute_query, execute_insert, execute_update
 
 app = FastAPI()
 
@@ -26,7 +26,7 @@ async def get_account(user_id: int):
     return result
 
 @app.post("/accounts", response_model=AccountResponse, status_code=201)
-async def get_account(account: AccountCreate):
+async def post_account(account: AccountCreate):
     user = execute_query("SELECT id FROM Users WHERE id = ?", (account.user_id,))
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -38,7 +38,35 @@ async def get_account(account: AccountCreate):
     new_account = execute_query(
         "SELECT id, user_id, name, spend_method, balance FROM Account WHERE id = ?",(new_id,))
     return new_account[0]
+
+@app.put("/accounts/{account_id}", response_model=AccountResponse)
+async def update_account(account_id: int, account: AccountUpdate):
+    existing = execute_query("SELECT id, user_id, name, spend_method, balance FROM Account WHERE id = ?", (account_id,))
+    if not existing:
+        raise HTTPException(status_code=404, detail="Account not exist")
+    updates = []
+    params = []
+
+    if account.name is not None:
+        updates.append("name = ?")
+        params.append(account.name)
     
+    if account.spend_method is not None:
+        updates.append("spend_method = ?")
+        params.append(account.spend_method)
+    
+    if account.balance is not None:
+        updates.append("balance = ?")
+        params.append(account.balance)
+    
+    if not updates:
+        return existing[0]
+
+    params.append(account_id)
+    sql = f"UPDATE Account SET {', '.join(updates)} WHERE id = ?"
+    execute_update(sql, params)
+    updated = execute_query("SELECT id, user_id, name, spend_method, balance FROM Account WHERE id = ?",(account_id,))
+    return updated[0]
 
 
 """Роуты для пользователя"""

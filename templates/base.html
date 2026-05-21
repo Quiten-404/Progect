@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BMW Finance - {% block title %}{% endblock %}</title>
+
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
+
     <style>
         * {
             margin: 0;
@@ -309,8 +313,8 @@
     <div class="navbar">
         <div class="nav-container">
             <a href="/web/accounts" class="logo">
-                <div class="logo-icon">M</div>
-                <span class="logo-text">BMW FINANCE</span>
+                <img src="/static/favicon.ico" alt="logo" class="logo-icon" style="width: 40px; height: 40px; border-radius: 0;">
+                <span class="logo-text">FINANCE</span>
             </a>
             <div class="nav-links">
                 {% if current_user %}

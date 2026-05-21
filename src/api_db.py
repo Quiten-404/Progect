@@ -12,15 +12,25 @@ from src.auth import (
     get_password_hash, verify_password, validate_password_strength,
     create_access_token, get_current_user
 )
+from fastapi import FastAPI, HTTPException, status,  Depends, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi import Request
 from pathlib import Path
+
+
+app = FastAPI()
+
+static_dir = Path(__file__).parent.parent / "static"
+if not static_dir.exists():
+    static_dir.mkdir()
+app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
 TEMPLATES_DIR = Path(__file__).parent.parent / "templates"
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
-app = FastAPI()
+
 @app.get("/test-category-transactions/{category_id}")
 async def test_category_tx(category_id: int):
     return {"message": f"Test {category_id}"}

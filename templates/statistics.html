@@ -5,7 +5,43 @@
 {% block content %}
 <div class="card">
     <h1>СТАТИСТИКА</h1>
-
+    
+    <!-- Форма выбора месяца -->
+    <form method="get" style="margin-bottom: 30px; padding: 20px; background: #1a1a1a; border-radius: 8px;">
+        <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>ГОД</label>
+                <select name="year">
+                    {% for y in available_years %}
+                    <option value="{{ y.year }}" {% if selected_year == y.year|int %}selected{% endif %}>
+                        {{ y.year }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>МЕСЯЦ</label>
+                <select name="month">
+                    <option value="1" {% if selected_month == 1 %}selected{% endif %}>Январь</option>
+                    <option value="2" {% if selected_month == 2 %}selected{% endif %}>Февраль</option>
+                    <option value="3" {% if selected_month == 3 %}selected{% endif %}>Март</option>
+                    <option value="4" {% if selected_month == 4 %}selected{% endif %}>Апрель</option>
+                    <option value="5" {% if selected_month == 5 %}selected{% endif %}>Май</option>
+                    <option value="6" {% if selected_month == 6 %}selected{% endif %}>Июнь</option>
+                    <option value="7" {% if selected_month == 7 %}selected{% endif %}>Июль</option>
+                    <option value="8" {% if selected_month == 8 %}selected{% endif %}>Август</option>
+                    <option value="9" {% if selected_month == 9 %}selected{% endif %}>Сентябрь</option>
+                    <option value="10" {% if selected_month == 10 %}selected{% endif %}>Октябрь</option>
+                    <option value="11" {% if selected_month == 11 %}selected{% endif %}>Ноябрь</option>
+                    <option value="12" {% if selected_month == 12 %}selected{% endif %}>Декабрь</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">ПОКАЗАТЬ</button>
+            </div>
+        </div>
+    </form>
+    
     <div class="stats-grid">
         <div class="stat-card">
             <h3>ВСЕГО ТРАНЗАКЦИЙ</h3>
@@ -13,15 +49,15 @@
         </div>
         <div class="stat-card">
             <h3>РАСХОДЫ</h3>
-            <p style="color: #dc3545;">{{ total_stats.total_expenses if total_stats else 0 }} ₽</p>
+            <p class="expense">{{ total_stats.total_expenses if total_stats else 0 }} ₽</p>
         </div>
         <div class="stat-card">
             <h3>ДОХОДЫ</h3>
-            <p style="color: #0066b3;">{{ total_stats.total_income if total_stats else 0 }} ₽</p>
+            <p class="income">{{ total_stats.total_income if total_stats else 0 }} ₽</p>
         </div>
     </div>
-
-    <h2>РАСХОДЫ ПО КАТЕГОРИЯМ</h2>
+    
+    <h2>📉 РАСХОДЫ ПО КАТЕГОРИЯМ</h2>
     <table>
         <thead>
             <tr>
@@ -42,9 +78,9 @@
             {% endfor %}
         </tbody>
     </table>
-
-    <h2>ДОХОДЫ ПО КАТЕГОРИЯМ</h2>
-    <table>
+    
+    <h2>📈 ДОХОДЫ ПО КАТЕГОРИЯМ</h2>
+    <tr>
         <thead>
             <tr>
                 <th>КАТЕГОРИЯ</th>

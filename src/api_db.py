@@ -331,7 +331,8 @@ async def web_transaction_create_form(request: Request):
         "title": "Создание транзакции",
         "transaction": None,
         "accounts": accounts,
-        "categories": categories
+        "categories": categories,
+        "current_user": current_user
     })
 
 @app.get("/web/transactions/{transaction_id}/delete")
@@ -431,7 +432,8 @@ async def web_category_create_form(request: Request):
     return templates.TemplateResponse("category_form.html", {
         "request": request,
         "title": "Создание категории",
-        "category": None
+        "category": None,
+        "current_user": current_user
     })
 
 @app.post("/web/categories/create")
@@ -703,7 +705,8 @@ async def web_account_create_form(request: Request):
     return templates.TemplateResponse("account_form.html", {
         "request": request,
         "title": "Создание счёта",
-        "account": None
+        "account": None,
+        "current_user": current_user
     })
 
 
@@ -774,43 +777,71 @@ async def web_account_delete(request: Request, account_id: int):
 # ========== ПОИСК И ФИЛЬТРАЦИЯ (ЭТАП 7) ==========
 
 @app.get("/web/statistics")
-async def web_statistics(request: Request):
+async def web_statistics(
+    request: Request, 
+    year: int = None, 
+    month: int = None
+):
     current_user = get_current_user_web(request)
     if not current_user:
         return RedirectResponse(url="/web/login", status_code=303)
     
-    # Расходы по категориям
-    expenses_by_category = execute_query("""
-        SELECT c.name as category_name, SUM(t.amount) as total
+    # Если год и месяц не указаны, показываем текущий месяц
+    from datetime import datetime
+    now = datetime.now()
+    if year is None:
+        year = now.year
+    if month is None:
+        month = now.month
+    
+    # Формируем условие для фильтрации по дате
+    date_filter = f"AND strftime('%Y', t.transaction_date) = '{year}' AND strftime('%m', t.transaction_date) = '{month:02d}'"
+    
+    # Расходы по категориям за выбранный месяц
+    expenses_by_category = execute_query(f"""
+        SELECT 
+            c.name as category_name,
+            SUM(t.amount) as total
         FROM "Transaction" t
         JOIN Categories c ON t.category_id = c.id
-        WHERE t.user_id = ? AND c.type = 'expense'
+        WHERE t.user_id = ? AND c.type = 'expense' {date_filter}
         GROUP BY c.name
         ORDER BY total DESC
     """, (current_user['id'],))
     
-    # Доходы по категориям
-    income_by_category = execute_query("""
-        SELECT c.name as category_name, SUM(t.amount) as total
+    # Доходы по категориям за выбранный месяц
+    income_by_category = execute_query(f"""
+        SELECT 
+            c.name as category_name,
+            SUM(t.amount) as total
         FROM "Transaction" t
         JOIN Categories c ON t.category_id = c.id
-        WHERE t.user_id = ? AND c.type = 'income'
+        WHERE t.user_id = ? AND c.type = 'income' {date_filter}
         GROUP BY c.name
         ORDER BY total DESC
     """, (current_user['id'],))
     
-    # Общая статистика
-    total_stats = execute_query("""
+    # Общая статистика за выбранный месяц
+    total_stats = execute_query(f"""
         SELECT 
             COUNT(*) as total_transactions,
             SUM(CASE WHEN c.type = 'expense' THEN t.amount ELSE 0 END) as total_expenses,
             SUM(CASE WHEN c.type = 'income' THEN t.amount ELSE 0 END) as total_income
         FROM "Transaction" t
         JOIN Categories c ON t.category_id = c.id
-        WHERE t.user_id = ?
+        WHERE t.user_id = ? {date_filter}
     """, (current_user['id'],))
     
+    # Баланс по счетам
     accounts = execute_query("SELECT name, balance FROM Account WHERE user_id = ?", (current_user['id'],))
+    
+    # Список доступных лет для выбора
+    available_years = execute_query("""
+        SELECT DISTINCT strftime('%Y', transaction_date) as year 
+        FROM "Transaction" 
+        WHERE user_id = ?
+        ORDER BY year DESC
+    """, (current_user['id'],))
     
     return templates.TemplateResponse("statistics.html", {
         "request": request,
@@ -818,7 +849,10 @@ async def web_statistics(request: Request):
         "income_by_category": income_by_category,
         "total_stats": total_stats[0] if total_stats else {"total_transactions": 0, "total_expenses": 0, "total_income": 0},
         "accounts": accounts,
-        "current_user": current_user
+        "current_user": current_user,
+        "selected_year": year,
+        "selected_month": month,
+        "available_years": available_years
     })
 
 

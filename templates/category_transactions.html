@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Транзакции категории: {{ category.name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 style="border-left: none; margin-bottom: 0;">
+            📂 {{ category.name }}
+        </h1>
+        <div>
+            <span class="btn" style="background: #1a1a1a; cursor: default;">
+                Общая сумма:
+                <span class="{% if category.type == 'expense' %}expense{% else %}income{% endif %}"
+                    style="font-size: 20px;">
+                    {{ total_amount }} ₽
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <p><strong>Тип:</strong>
+            <span class="{% if category.type == 'expense' %}expense{% else %}income{% endif %}">
+                {% if category.type == 'expense' %}📉 РАСХОД{% else %}📈 ДОХОД{% endif %}
+            </span>
+        </p>
+    </div>
+
+    <a href="/web/categories" class="btn">◀ НАЗАД К КАТЕГОРИЯМ</a>
+
+    <h2 style="margin-top: 30px;">📋 ТРАНЗАКЦИИ</h2>
+
+    {% if transactions %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>СЧЁТ</th>
+                <th>СУММА</th>
+                <th>ОПИСАНИЕ</th>
+                <th>ДАТА</th>
+                <th>ДЕЙСТВИЯ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tx in transactions %}
+            <tr>
+                <td>{{ tx.id }}</td>
+                <td>{{ tx.account_name }}</td>
+                <td class="{% if category.type == 'expense' %}expense{% else %}income{% endif %}">
+                    {{ tx.amount }} ₽
+                </td>
+                <td>{{ tx.description or '-' }}</td>
+                <td>{{ tx.transaction_date[:19] if tx.transaction_date else '-' }}</td>
+                <td>
+                    <a href="/web/transactions/{{ tx.id }}/delete" class="btn btn-danger"
+                        onclick="return confirm('Удалить транзакцию?')">🗑️</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; color: #666; padding: 40px;">Нет транзакций в этой категории</p>
+    {% endif %}
+</div>
+{% endblock %}

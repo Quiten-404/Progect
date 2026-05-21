@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>СТАТИСТИКА</h1>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>ВСЕГО ТРАНЗАКЦИЙ</h3>
+            <p>{{ total_stats.total_transactions if total_stats else 0 }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>РАСХОДЫ</h3>
+            <p style="color: #dc3545;">{{ total_stats.total_expenses if total_stats else 0 }} ₽</p>
+        </div>
+        <div class="stat-card">
+            <h3>ДОХОДЫ</h3>
+            <p style="color: #0066b3;">{{ total_stats.total_income if total_stats else 0 }} ₽</p>
+        </div>
+    </div>
+
+    <h2>РАСХОДЫ ПО КАТЕГОРИЯМ</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>КАТЕГОРИЯ</th>
+                <th>СУММА</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cat in expenses_by_category %}
+            <tr>
+                <td>{{ cat.category_name }}</td>
+                <td class="expense">{{ cat.total }} ₽</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="2">Нет данных о расходах</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>ДОХОДЫ ПО КАТЕГОРИЯМ</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>КАТЕГОРИЯ</th>
+                <th>СУММА</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cat in income_by_category %}
+            <tr>
+                <td>{{ cat.category_name }}</td>
+                <td class="income">{{ cat.total }} ₽</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="2">Нет данных о доходах</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -52,7 +52,7 @@ def execute_insert(sql: str, params = ()):
 
 def execute_update(sql: str, params = ()):
      with get_DB() as conn:
-        if param:
+        if params:
             cur = conn.execute(sql, params)
         else:
             cur = conn.execute(sql)

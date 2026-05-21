@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Транзакции{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>ТРАНЗАКЦИИ</h1>
+    <a href="/web/transactions/create" class="btn btn-primary" style="margin-bottom: 20px;">+ ДОБАВИТЬ ТРАНЗАКЦИЮ</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>СЧЁТ</th>
+                <th>КАТЕГОРИЯ</th>
+                <th>СУММА</th>
+                <th>ОПИСАНИЕ</th>
+                <th>ДАТА</th>
+                <th>ДЕЙСТВИЯ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tx in transactions %}
+            <tr>
+                <td>{{ tx.id }}</td>
+                <td>{{ tx.account_name }}</td>
+                <td>{{ tx.category_name }}</td>
+                <td class="{% if tx.transaction_type == 'expense' %}expense{% else %}income{% endif %}">
+                    {{ tx.amount }} ₽
+                </td>
+                <td>{{ tx.description or '-' }}</td>
+                <td>{{ tx.transaction_date[:19] if tx.transaction_date else '-' }}</td>
+                <td>
+                    <a href="/web/transactions/{{ tx.id }}/delete" class="btn btn-danger"
+                        onclick="return confirm('Удалить?')">🗑️</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

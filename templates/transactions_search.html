@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Поиск транзакций{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>ПОИСК ТРАНЗАКЦИЙ</h1>
+
+    <!-- Форма поиска -->
+    <form method="get" style="margin-bottom: 30px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group">
+                <label>ПОИСК ПО ОПИСАНИЮ</label>
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Введите текст...">
+            </div>
+            <div class="form-group">
+                <label>КАТЕГОРИЯ</label>
+                <select name="category_id">
+                    <option value="0">Все категории</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if selected_category==cat.id %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>ДАТА ОТ</label>
+                <input type="date" name="date_from" value="{{ date_from }}">
+            </div>
+            <div class="form-group">
+                <label>ДАТА ДО</label>
+                <input type="date" name="date_to" value="{{ date_to }}">
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="submit" class="btn btn-primary">🔍 НАЙТИ</button>
+            <a href="/web/transactions/search" class="btn">СБРОСИТЬ</a>
+        </div>
+    </form>
+
+    <h2>РЕЗУЛЬТАТЫ ({{ transactions|length }})</h2>
+
+    {% if transactions %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>СЧЁТ</th>
+                <th>КАТЕГОРИЯ</th>
+                <th>СУММА</th>
+                <th>ОПИСАНИЕ</th>
+                <th>ДАТА</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tx in transactions %}
+            <tr>
+                <td>{{ tx.id }}</td>
+                <td>{{ tx.account_name }}</td>
+                <td>{{ tx.category_name }}</td>
+                <td class="{% if tx.transaction_type == 'expense' %}expense{% else %}income{% endif %}">
+                    {{ tx.amount }} ₽
+                </td>
+                <td>{{ tx.description or '-' }}</td>
+                <td>{{ tx.transaction_date[:19] if tx.transaction_date else '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; color: #666; padding: 40px;">Транзакции не найдены</p>
+    {% endif %}
+</div>
+{% endblock %}

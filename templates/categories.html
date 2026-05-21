@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Категории{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>КАТЕГОРИИ</h1>
+
+    <a href="/web/categories/create" class="btn btn-primary" style="margin-bottom: 20px;">+ ДОБАВИТЬ КАТЕГОРИЮ</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>НАЗВАНИЕ</th>
+                <th>ТИП</th>
+                <th>РАСХОДЫ</th>
+                <th>ДЕЙСТВИЯ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cat in categories %}
+            <tr>
+                <td>{{ cat.id }}</td>
+                <td>
+                    <a href="/web/categories/{{ cat.id }}/transactions" style="color: #0066b3; text-decoration: none;">
+                        {{ cat.name }}
+                    </a>
+                </td>
+                <td class="{% if cat.type == 'expense' %}expense{% else %}income{% endif %}">
+                    {% if cat.type == 'expense' %}📉 РАСХОД{% else %}📈 ДОХОД{% endif %}
+                </td>
+                <td class="expense">{{ cat.total_amount }} ₽</td>
+                <td>
+                    <a href="/web/categories/{{ cat.id }}/delete" class="btn btn-danger"
+                        onclick="return confirm('Удалить категорию?')">🗑️</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

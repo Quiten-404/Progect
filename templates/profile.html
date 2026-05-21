@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>ПРОФИЛЬ</h1>
+
+    <table style="margin-bottom: 30px;">
+        <tr>
+            <th style="width: 200px;">ID</th>
+            <td>{{ user.id }}</td>
+        </tr>
+        <tr>
+            <th>ИМЯ</th>
+            <td>{{ user.name }}</td>
+        </tr>
+        <tr>
+            <th>EMAIL</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th>ВАЛЮТА</th>
+            <td>{{ user.currency }}</td>
+        </tr>
+        <tr>
+            <th>ДАТА РЕГИСТРАЦИИ</th>
+            <td>{{ user.created_at[:19] if user.created_at else '-' }}</td>
+        </tr>
+    </table>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>ТРАНЗАКЦИЙ</h3>
+            <p>{{ stats.total_transactions }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>БАЛАНС</h3>
+            <p>{{ total_balance }} {{ user.currency }}</p>
+        </div>
+    </div>
+
+    <a href="/web/accounts" class="btn btn-primary">◀ К СЧЕТАМ</a>
+</div>
+{% endblock %}

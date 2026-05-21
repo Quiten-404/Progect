@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Счета{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>МОИ СЧЕТА</h1>
+    <a href="/web/accounts/create" class="btn btn-primary" style="margin-bottom: 20px;">+ ДОБАВИТЬ СЧЁТ</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>НАЗВАНИЕ</th>
+                <th>СПОСОБ</th>
+                <th>БАЛАНС</th>
+                <th>ДЕЙСТВИЯ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in accounts %}
+            <tr>
+                <td>{{ account.id }}</td>
+                <td>{{ account.name }}</td>
+                <td>{% if account.spend_method == 'CARD' %}💳 CARD{% else %}💵 CASH{% endif %}</td>
+                <td style="font-weight: 600;">{{ account.balance }} ₽</td>
+                <td>
+                    <a href="/web/accounts/{{ account.id }}/edit" class="btn btn-warning">✏️</a>
+                    <a href="/web/accounts/{{ account.id }}/delete" class="btn btn-danger"
+                        onclick="return confirm('Удалить счёт?')">🗑️</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

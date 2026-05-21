@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ title }}</h1>
+    <form method="post">
+        <div class="form-group">
+            <label>НАЗВАНИЕ КАТЕГОРИИ</label>
+            <input type="text" name="name" value="{{ category.name if category else '' }}" required>
+        </div>
+        <div class="form-group">
+            <label>ТИП</label>
+            <select name="type">
+                <option value="expense" {% if category and category.type=='expense' %}selected{% endif %}>📉 РАСХОД
+                </option>
+                <option value="income" {% if category and category.type=='income' %}selected{% endif %}>📈 ДОХОД
+                </option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">💾 СОХРАНИТЬ</button>
+        <a href="/web/categories" class="btn">❌ ОТМЕНА</a>
+    </form>
+</div>
+{% endblock %}

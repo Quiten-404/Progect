@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Вход - BMW Finance{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 450px; margin: 60px auto;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <div
+            style="width: 60px; height: 60px; background: #0066b3; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <span style="font-size: 28px; font-weight: bold;">M</span>
+        </div>
+        <h1 style="border-left: none; text-align: center; font-size: 24px;">ВХОД В СИСТЕМУ</h1>
+        <p style="color: #666; font-size: 13px; margin-top: 10px;">BMW Financial Management</p>
+    </div>
+
+    {% if error %}
+    <div
+        style="background: #1a0000; border: 1px solid #dc3545; border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+        <p style="color: #dc3545; margin: 0; font-size: 13px;">⚠️ {{ error }}</p>
+    </div>
+    {% endif %}
+
+    <form method="post">
+        <div class="form-group">
+            <label>📧 EMAIL ИЛИ ИМЯ</label>
+            <input type="text" name="login" placeholder="demo@example.com" required>
+        </div>
+        <div class="form-group">
+            <label>🔒 ПАРОЛЬ</label>
+            <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary"
+            style="width: 100%; padding: 12px; font-size: 14px; margin-top: 10px;">
+            ВОЙТИ
+        </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #222;">
+        <p style="color: #666; font-size: 13px;">Нет аккаунта?</p>
+        <a href="/web/register" class="btn btn-success" style="margin-top: 10px; display: inline-block;">
+            ЗАРЕГИСТРИРОВАТЬСЯ
+        </a>
+    </div>
+</div>
+{% endblock %}

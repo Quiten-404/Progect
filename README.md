@@ -53,30 +53,34 @@
 
 ## Структура проекта
 
-```
+
+```bash
 Progect/
 ├── src/
 │   ├── api_db.py          # FastAPI приложение (все эндпоинты)
 │   ├── database.py        # Работа с SQLite (подключение, CRUD)
 │   ├── auth.py            # JWT токены, хеширование, проверка пароля
 │   └── schemas.py         # Pydantic модели с валидацией
+│
 ├── templates/             # HTML шаблоны (Jinja2)
 │   ├── base.html          # Базовый шаблон
 │   ├── accounts.html      # Список счетов
 │   ├── account_form.html  # Форма счёта
 │   ├── transactions.html  # Список транзакций
-│   ├── transaction_form.html # Форма транзакции
-│   ├── transactions_search.html # Поиск и фильтрация
+│   ├── transaction_form.html  # Форма транзакции
+│   ├── transactions_search.html  # Поиск и фильтрация
 │   ├── categories.html    # Список категорий
 │   ├── category_form.html # Форма категории
-│   ├── category_transactions.html # Транзакции по категории
+│   ├── category_transactions.html  # Транзакции по категории
 │   ├── statistics.html    # Статистика
 │   ├── profile.html       # Профиль пользователя
 │   ├── login.html         # Страница входа
 │   └── register.html      # Страница регистрации
+│
 ├── database/
 │   ├── finance.db         # Файл базы данных SQLite
 │   └── finance.sql        # SQL схема таблиц
+│
 ├── requirements.txt       # Зависимости проекта
 └── README.md              # Документация
 ```
